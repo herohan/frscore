@@ -2,18 +2,12 @@
 
 require_once("../i/cards.inc");
 
-//$gRealmCards = json_decode($card_list);
 function FindRealmCard($id)
 {
 //print("$id<br>");
 	GLOBAL $gRealmCards;
 
-//print("<pre>\n");
-	foreach ($gRealmCards as $card) {
-//print_r($card);
-		if ($card->id==$id) return $card;
-	}
-//print("</pre>\n");
+	foreach ($gRealmCards as $card) if ($card->id==$id) return $card;
 	return null;
 }
 
@@ -21,27 +15,68 @@ function MakeScoreSheet($hands)
 {
 	$sheet = array();
 	foreach ($hands as $hand) {
-		$card = FindRealmCard($hand);
 		$temp_list = array(
-			'card_idx' => $hand,
+			'card' => FindRealmCard($hand),
 			'base' => 0,
 			'bonus' => 0,
 			'penalty' => 0,
+			'penalty_cleared' => false,
 			'total' => 0,
 		);
-		if ($card==null) {
-		}
-		else {
-			$temp_list['base'] = $card->base;
-		}
 		array_push($sheet, $temp_list);
 	}
 	return $sheet;
 }
 
+function IsTarget($card, $list)
+{
+	foreach ($list as $item) {
+		if ($item->type=='suit') {
+//print("<pre>\n"); print_r($card['card']->suit); print("</pre>\n");
+//print "[$card->suit : $item->id]";
+			if ($item->id==$card['card']->suit) return true;
+			else continue;
+		}
+	}
+	return false;
+}
+
+function CheckClearPenaltyCard($card, $clear)
+{
+	switch ($clear->type) {
+		case 'all':
+			if (IsTarget($card, $clear->list)) return true;
+			else return false;
+			break;
+	}
+}
+
+function CheckClearPenaltySheet($sheet)
+{
+	foreach ($sheet as $card_score) {
+		if (isset($card_score['card']->clear)) {
+			foreach ($sheet as &$other_card) {
+				if ($other_card['card']->id==$card_score['card']->id) continue;
+				if (CheckClearPenaltyCard($other_card, $card_score['card']->clear)) $other_card['penalty_cleared'] = true;
+			}
+		}
+	}
+}
+
 function CalcHands($hands)
 {
+	// init score sheet
 	$score_sheet = MakeScoreSheet($hands);
+
+	// calculation
+	// check clear
+	CheckClearPenaltySheet(&$score_sheet);
+	// calc bonus
+//	CalcBonusSheet(&$score_sheet);
+	// calc penalty
+//	CalcPenaltySheet(&$score_sheet);
+	// total
+//	$total = TotalScoreSheet(&$score_sheet);
 /*
 print("<pre>\n");
 print_r($score_sheet);
