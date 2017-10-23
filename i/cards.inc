@@ -147,4 +147,5 @@ $card_list = '[
 			"desc_eng" : "PENALTY: -40 unless with at least one Wizard."
 		}
 ]';
+$gRealmCards = json_decode($card_list);
 ?>
