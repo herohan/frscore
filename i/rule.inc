@@ -63,6 +63,42 @@ function CheckClearPenaltySheet($sheet)
 	}
 }
 
+function HaveTarget($sheet, $target)
+{
+	if ($target->type=='card') {
+		foreach ($sheet as $card) {
+			if ($card['card']->id==$target->id) return true;
+		}
+	}
+	return false;
+}
+
+function CheckCardBonus($card, $sheet)
+{
+	switch ($card->bonus->type) {
+		case 'withall':
+			foreach ($card->bonus->list as $target) {
+				if (!HaveTarget($sheet, $target)) return false;
+			}
+			return true;
+		case 'withor':
+			foreach ($card->bonus->list as $target) {
+				if (HaveTarget($sheet, $target)) return true;
+			}
+			return false;
+	}
+	return true;
+}
+
+function CalcBonusSheet($sheet)
+{
+	foreach ($sheet as &$card_score) {
+		if (isset($card_score['card']->bonus)) {
+			if (CheckCardBonus($card_score['card'], $sheet)) $card_score['bonus'] = $card_score['card']->bonus->point;
+		}
+	}
+}
+
 function CalcHands($hands)
 {
 	// init score sheet
@@ -72,15 +108,15 @@ function CalcHands($hands)
 	// check clear
 	CheckClearPenaltySheet(&$score_sheet);
 	// calc bonus
-//	CalcBonusSheet(&$score_sheet);
+	CalcBonusSheet(&$score_sheet);
 	// calc penalty
 //	CalcPenaltySheet(&$score_sheet);
 	// total
 //	$total = TotalScoreSheet(&$score_sheet);
-/*
 print("<pre>\n");
 print_r($score_sheet);
 print("</pre>\n");
+/*
  */
 	return 0;
 }
