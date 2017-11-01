@@ -1,6 +1,6 @@
 <?php
 
-require_once("../i/common.inc");
+require_once("../i/rule.inc");
 
 $hands_1 = array(1, 2, 3, 4, 13, 6, 16);
 CalcHands($hands_1)
