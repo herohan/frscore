@@ -70,6 +70,11 @@ function HaveTarget($sheet, $target)
 			if ($card['card']->id==$target->id) return true;
 		}
 	}
+	else if ($target->type=='suit') {
+		foreach ($sheet as $card) {
+			if ($card['card']->suit==$target->id) return true;
+		}
+	}
 	return false;
 }
 
@@ -82,12 +87,13 @@ function CheckCardBonus($card, $sheet)
 			}
 			return true;
 		case 'withor':
+		case 'withany':
 			foreach ($card->bonus->list as $target) {
 				if (HaveTarget($sheet, $target)) return true;
 			}
 			return false;
 	}
-	return true;
+	return false;
 }
 
 function CalcBonusSheet($sheet)

@@ -67,21 +67,58 @@ $card_list = '[
 			"name" : "Bell Tower",
 			"suit" : "Land",
 			"base" : 8,
-			"bonus" : "+15 with any one Wizard"
+			"desc_eng" : "+15 with any one Wizard",
+			"desc_kor" : "Wizard가 있으면 +15점",
+			"bonus" : {
+				"point" : 15,
+				"type" : "withany",
+				"list" : [
+					{
+						"type" : "suit",
+						"id" : "Wizard"
+					}
+				]
+			}
 		},
 		{
 			"id" : 4,
 			"name" : "Forest",
 			"suit" : "Land",
 			"base" : 7,
-			"bonus" : "+12 for each Beast and Elven Archers"
+			"desc_eng" : "+12 for each Beast and Elven Archers",
+			"desc_kor" : "Beast와 Elven Archers 마다 +12점",
+			"bonus" : {
+				"point" : 12,
+				"type" : "foreach",
+				"list" : [
+					{
+						"type" : "suit",
+						"id" : "Beast"
+					},
+					{
+						"type" : "card",
+						"id" : 22
+					}
+				]
+			}
 		},
 		{
 			"id" : 5,
 			"name" : "Earth Elemental",
 			"suit" : "Land",
 			"base" : 4,
-			"bonus" : "+15 for each other Land"			
+			"desc_eng" : "+15 for each other Land",
+			"desc_kor" : "다른 Land마다 +15점",
+			"bonus" : {
+				"point" : 15,
+				"type" : "foreachother",
+				"list" : [
+					{
+						"type" : "suit",
+						"id" : "Land"
+					}
+				]
+			}
 		},
 		{
 			"id" : 6,
@@ -133,11 +170,25 @@ $card_list = '[
 			"desc_eng" : "BLANKS all cards except Flames, Wizards, Weather, Weapons, Artifacts, Mountain, Great Flood, Island, Unicorn and Dragon"
 		},
 		{
+			"id" : 22,
+			"name" : "Elven Archers",
+			"suit" : "Army",
+			"base" : 10,
+			"desc_eng" : "BONUS: +5 if no Weather."
+		},
+		{
 			"id" : 24,
 			"name" : "Dwarvish Infantry",
 			"suit" : "Army",
 			"base" : 15,
 			"desc_eng" : "PENALTY: -2 for each other Army."
+		},
+		{
+			"id" : 27,
+			"name" : "Beast Master",
+			"suit" : "Wizard",
+			"base" : 9,
+			"desc_eng" : "BONUS: +9 for each Beast. CLEARS the Penalty on all Beasts."
 		},
 		{
 			"id" : 39,
