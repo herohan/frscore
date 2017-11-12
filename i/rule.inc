@@ -83,24 +83,28 @@ function CheckCardBonus($card, $sheet)
 	switch ($card->bonus->type) {
 		case 'withall':
 			foreach ($card->bonus->list as $target) {
-				if (!HaveTarget($sheet, $target)) return false;
+				if (!HaveTarget($sheet, $target)) return 0;
 			}
-			return true;
+			return $card->bonus->point;
 		case 'withor':
 		case 'withany':
 			foreach ($card->bonus->list as $target) {
-				if (HaveTarget($sheet, $target)) return true;
+				if (HaveTarget($sheet, $target)) return $card->bonus->point;
 			}
-			return false;
+			return 0;
+		case 'foreach':
+			return 0;
+		case 'foreachother':
+			return 0;
 	}
-	return false;
+	return 0;
 }
 
 function CalcBonusSheet($sheet)
 {
 	foreach ($sheet as &$card_score) {
 		if (isset($card_score['card']->bonus)) {
-			if (CheckCardBonus($card_score['card'], $sheet)) $card_score['bonus'] = $card_score['card']->bonus->point;
+			$card_score['bonus'] = CheckCardBonus($card_score['card'], $sheet);
 		}
 	}
 }
