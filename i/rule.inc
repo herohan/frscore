@@ -78,6 +78,19 @@ function HaveTarget($sheet, $target)
 	return false;
 }
 
+function InTargetList($card, $list)
+{
+	foreach ($list as $target) {
+		if ($target->type=='card') {
+			if ($card["card"]->id==$target->id) return true;
+		}
+		else if ($target->type=='suit') {
+			if ($card["card"]->suit==$target->id) return true;
+		}
+	}
+	return false;
+}
+
 function CheckCardBonus($card, $sheet)
 {
 	switch ($card->bonus->type) {
@@ -93,7 +106,11 @@ function CheckCardBonus($card, $sheet)
 			}
 			return 0;
 		case 'foreach':
-			return 0;
+			$sum = 0;
+			foreach ($sheet as $a_card) {
+				if (InTargetList($a_card, $card->bonus->list)) $sum += $card->bonus->point;
+			}
+			return $sum;
 		case 'foreachother':
 			return 0;
 	}
